@@ -13,12 +13,12 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/donsprallo/DataCompression",
     packages=[
-        'datacompression',
-        'datacompression.compression'
+        'pycompress',
+        'pycompress.compression'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: GPL3 License",
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
@@ -27,7 +27,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'pycompress=datacompression.main:main'
+            'pycompress=pycompress.main:main'
         ]
     },
 )
