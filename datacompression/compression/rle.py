@@ -1,4 +1,4 @@
-def rle(data: bytes) -> bytes:
+def rle(data: bytes, progress) -> bytes:
     code = bytearray()
     counter = 0
     last = data[0]
@@ -8,6 +8,7 @@ def rle(data: bytes) -> bytes:
         code.append(cnt)
 
     for c in data:
+        progress.next()
         if c == last:
             counter += 1
             if counter == 0xFF:
@@ -23,7 +24,7 @@ def rle(data: bytes) -> bytes:
     return bytes(code)
 
 
-def irle(code: bytes) -> bytes:
+def irle(code: bytes, progress) -> bytes:
     data = bytearray()
 
     def decode(data, cnt):
@@ -31,4 +32,5 @@ def irle(code: bytes) -> bytes:
 
     for i in range(0, len(code), 2):
         data.extend(decode(code[i], int(code[i+1])))
+        progress.next(2)
     return bytes(data)

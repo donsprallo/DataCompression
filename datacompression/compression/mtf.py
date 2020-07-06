@@ -5,7 +5,7 @@ mtf_dictionary = block32(0x60) + block32(0x40) + \
     block32(0x20) + block32(0x00) + list(range(128, 256))
 
 
-def mtf(data: bytes) -> bytes:
+def mtf(data: bytes, progress) -> bytes:
     dictionary = mtf_dictionary.copy()
     compressed = bytearray()
     rank = 0
@@ -15,11 +15,12 @@ def mtf(data: bytes) -> bytes:
         compressed.append(rank)
         dictionary.pop(rank)
         dictionary.insert(0, c)
+        progress.next()
 
     return bytes(compressed)
 
 
-def imtf(code: bytes) -> bytes:
+def imtf(code: bytes, progress) -> bytes:
     compressed = code
     dictionary = mtf_dictionary.copy()
     plain_text = bytearray()
@@ -28,5 +29,6 @@ def imtf(code: bytes) -> bytes:
         plain_text.append(dictionary[rank])
         e = dictionary.pop(rank)
         dictionary.insert(0, e)
+        progress.next()
 
     return bytes(plain_text)

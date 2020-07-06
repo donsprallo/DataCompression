@@ -11,19 +11,19 @@ compressors = {
 }
 
 
-def encode(data: bytes, encoder: str) -> bytes:
+def encode(data: bytes, encoder: str, progress) -> bytes:
     """ Encodes the data with the selected encoder. """
 
     if encoder in compressors:
-        return compressors[encoder][0](data)
+        return compressors[encoder][0](data, progress)
     else:
         raise Exception('No valid encoder.')
 
 
-def decode(data: bytes, decoder: str) -> bytes:
+def decode(data: bytes, decoder: str, progress) -> bytes:
     """ Decodes the data with the selected decoder. """
 
     if decoder in compressors:
-        return compressors[decoder][1](data)
+        return compressors[decoder][1](data, progress)
     else:
         raise Exception('No valid decoder.')

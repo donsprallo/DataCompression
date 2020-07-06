@@ -143,16 +143,13 @@ class CircularLinkedList:
         raise Exception(f"Node with data '{target_node_data}' not found")
 
 
-def bwt(data: bytes) -> bytes:
-    """
-    table = [(i, data[i], data[-1+i]) for i in range(len(data))]
-    table = sorted(table, key=lambda x: x[1])
-    index = table.index(next(x for x in table if x[0] == 0))
-    last_column = [row[2] for row in table]
-    return index, bytes(last_column)
-    """
+def bwt(data: bytes, progress) -> bytes:
+    def shift(i, cll):
+        progress.next()
+        return (i, cll.shiftr())
+
     cll = CircularLinkedList(data)
-    table = [(i, cll.shiftr()) for i in range(len(cll))]
+    table = [shift(i, cll) for i in range(len(cll))]
     table = sorted(table, key=lambda x: x[1])
     index = table.index(next(x for x in table if x[0] == 0))
     last_column = [row[1].prev.data for row in table]
@@ -161,11 +158,12 @@ def bwt(data: bytes) -> bytes:
     return bytes(last_column)
 
 
-def ibwt(last: bytes) -> bytes:
+def ibwt(last: bytes, progress) -> bytes:
     index, = struct.unpack('<I', last[:4])
     last = last[4:]
     first = bytes(sorted(last))
     uncompressed = bytearray()
+    progress.goto(4)
 
     # pylint: disable=unused-variable
     for i in range(len(last)):
@@ -179,5 +177,6 @@ def ibwt(last: bytes) -> bytes:
                     index = k
                     break
                 count -= 1
+        progress.next()
 
     return bytes(uncompressed)
