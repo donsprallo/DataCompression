@@ -1,10 +1,10 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="pycompress",
+    name="pycompress-don",
     version="0.0.2",
     author="Nico Hanisch",
     author_email="donsprallo@gmail.com",
@@ -18,8 +18,10 @@ setup(
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
+        'Environment :: Console',
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Operating System :: OS Independent",
+        'Topic :: Utilities',
     ],
     python_requires='>=3.6',
     install_requires=[

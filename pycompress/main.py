@@ -1,7 +1,7 @@
 import argparse
 import sys
 from progress.bar import IncrementalBar
-from datacompression.compression import encode, decode
+from compression import encode, decode, compressors
 
 
 def main():
@@ -16,6 +16,18 @@ def main():
         '-o', '--output', dest='outfile', nargs='?',
         type=argparse.FileType('wb'), default=sys.stdout,
         help="Path to the compression output.")
+
+    # Sub commands
+    subparsers = parser.add_subparsers()
+
+    encode_parser = subparsers.add_parser('encode')
+    encode_parser.add_argument(
+        'encoders', choices=compressors.keys(), nargs='*')
+
+    decode_parser = subparsers.add_parser('decode')
+    decode_parser.add_argument(
+        'decoders', choices=compressors.keys(), nargs='*')
+
     args = parser.parse_args()
 
     # Read input data
@@ -31,17 +43,15 @@ def main():
 
     sys.stderr.write(f"Consuming {len(data)} Bytes\n")
 
-    # Workflow steps
-    workflow = [
-        (encode, 'bwt', "BWT encoding"),
-        (encode, 'rle', "RLE encoding"),
-        (encode, 'mtf', "MTF encoding"),
-        (decode, 'mtf', "MTF decoding"),
-        (decode, 'rle', "RLE decoding"),
-        (decode, 'bwt', "BWT decoding")
-    ]
+    # Get workflow steps from CLI
+    if hasattr(args, 'encoders'):
+        workflow = [(encode, e, f"{e} encoding")
+                    for e in args.encoders]
+    if hasattr(args, 'decoders'):
+        workflow = [(decode, d, f"{d} decoding")
+                    for d in args.decoders]
 
-    # Process all work steps
+    # Process all workflow steps
     for step in workflow:
         bar = IncrementalBar(step[2], max=len(data),
                              suffix='%(index)d/%(max)d Bytes [%(elapsed)ds]')

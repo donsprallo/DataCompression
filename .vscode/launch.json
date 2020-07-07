@@ -9,7 +9,17 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "args": [
+                "--file",
+                "LICENSE",
+                "--output",
+                "encode.txt",
+                "encode",
+                "bwt",
+                "rle",
+                "mtf"
+            ]
         }
     ]
 }
